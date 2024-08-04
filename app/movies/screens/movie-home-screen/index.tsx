@@ -1,5 +1,5 @@
-import { ActivityIndicator, Alert, FlatList, Image, ImageBackground, StyleSheet, Text, View } from 'react-native'
-import React, { useEffect, useLayoutEffect, useState } from 'react'
+import { ActivityIndicator, Alert, Animated, FlatList, Image, ImageBackground, StyleSheet, Text, View } from 'react-native'
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useGetUpcomingMoviesQuery } from '../../api/upcoming-movies';
 import { getServerError } from '../../../utils/error';
 import Screen from '../../../ui/Screen';
@@ -11,9 +11,16 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { MoviesPrimaryCard } from '../../../common/components/Cards';
 import { useNavigation } from '../../../utils/navigation';
 import { Movie } from '../../types/movie';
+import AnimatedHeader from '../../components/AnimatedHeader';
 
 const HomeScreen = () => {
     const navigation = useNavigation();
+
+    // STATE
+    const [dVal, setdVal] = useState(85)
+    // REFS
+    const scrollY = new Animated.Value(0);
+    const diffClamp = Animated.diffClamp(scrollY, 0, dVal);
     // API HOOKS
     const { data, isLoading, error } = useGetUpcomingMoviesQuery("");
 
@@ -52,6 +59,12 @@ const HomeScreen = () => {
     }
 
 
+    const translateY = diffClamp.interpolate({
+        inputRange: [0, 45],
+        outputRange: [0, -45],
+    });
+
+
     const keyExtractor = (_item: any, index: number) => index.toString();
 
     const renderItem = (items: Movie | any) => {
@@ -80,12 +93,40 @@ const HomeScreen = () => {
                 contentContainerStyle={styles.listStyles}
                 keyExtractor={keyExtractor}
                 ListEmptyComponent={renderEmptyList}
+                onScroll={Animated.event(
+                    [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+                    { useNativeDriver: false }
+                )}
+                onScrollEndDrag={({ nativeEvent }) => {
+                    if (nativeEvent.contentOffset.y <= 0) {
+                        setdVal(0);
+                    }
+                    else {
+                        setdVal(85)
+                    }
+                }}
             />
         );
     };
 
     return (
         <Screen unsafe style={styles.container} noHorizontalPadding statusBar='dark-content'>
+            <Animated.View
+                style={[
+                    styles.header,
+                    {
+                        transform: [{ translateY: translateY }],
+                        elevation: 4,
+                        zIndex: 100,
+                    },
+                ]}
+            >
+                <AnimatedHeader
+                    textLeft={"Watch"}
+                    icon={<SearchIcon name="search" size={20} color={defaultColors.BLACK} />}
+                    onSearch={() => navigation.navigate("Media")}
+                />
+            </Animated.View>
             <View style={styles.form}>
                 {isLoading ? <ActivityIndicator size={40} color={defaultColors.PRIMARY} /> :
                     renderFlatList(movies)
@@ -101,10 +142,11 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: defaultColors.OFFWHITE,
+        padding: 0,
     },
     form: {
         alignItems: "center",
-        marginTop: getHeightPercentage(2)
+        // marginTop: getHeightPercentage(2)
     },
     coverImageContainer: {
         backgroundColor: defaultColors.LIGHT_GRAY,
@@ -117,7 +159,6 @@ const styles = StyleSheet.create({
         width: getWidthPercentage(90),
         borderRadius: 10,
     },
-
     movieName: {
         alignSelf: "flex-start",
         color: defaultColors.WHITE,
@@ -126,7 +167,8 @@ const styles = StyleSheet.create({
     },
     listStyles: {
         marginTop: 15,
-        paddingBottom: 50
+        paddingBottom: 50,
+        paddingTop: getHeightPercentage(9)
     },
 
     description: {
@@ -136,6 +178,30 @@ const styles = StyleSheet.create({
     statsTextWrap: {
         alignItems: "center",
         justifyContent: "center"
+    },
+    header: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        backgroundColor: 'tomato',
+        zIndex: 1000,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    headerText: {
+        color: 'white',
+        fontSize: 20,
+        fontWeight: 'bold',
+    },
+    item: {
+        backgroundColor: '#f9c2ff',
+        padding: 20,
+        marginVertical: 8,
+        marginHorizontal: 16,
+    },
+    title: {
+        fontSize: 24,
     },
 
 })

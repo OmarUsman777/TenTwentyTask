@@ -52,6 +52,7 @@ const DashboardScreen = () => {
                 name="HomeScreen"
                 component={HomeScreen}
                 options={{
+                    headerShown: false,
                     tabBarIcon: ({ focused }) => (
                         <View style={styles.wrapper}>
                             <Icon2 name="play-box" size={30} color={focused ? defaultColors.WHITE : defaultColors.GRAY} />
