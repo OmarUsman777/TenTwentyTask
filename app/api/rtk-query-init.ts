@@ -26,7 +26,7 @@ export const getHeaders = () => {
     // SET YOUR BEARER TOKEN IN token,
     const headers = new Headers();
     headers.append("Content-Type", "application/json");
-    const token = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmODg4MjA0NmYxNWUwM2Y0MzcxODAyMGY4NWNhZWU0YiIsIm5iZiI6MTcyMjU5MDU2NC41NDQ5Niwic3ViIjoiNjZhY2E0MDQyNTU3MDY0ZWM1MGI0MWJjIiwic2NvcGVzIjpbImFwaV9yZWFkIl0sInZlcnNpb24iOjF9.PfgquQNtfx5p55A95ZEIkaVjcyaCzHCC763FtkHcYBI'; // <-----HERE------
+    const token = ''; // <-----HERE------
     if (token) {
         headers.append("Authorization", `Bearer ${token}`);
     }
