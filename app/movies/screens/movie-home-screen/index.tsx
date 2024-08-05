@@ -26,7 +26,6 @@ const HomeScreen = () => {
 
     // STATES
     const [movies, setMovies] = useState<Movie | any>([]);
-
     useLayoutEffect(() => {
         navigation.setOptions({
             headerLeft: () => (

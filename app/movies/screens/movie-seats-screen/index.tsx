@@ -2,7 +2,6 @@ import { StyleSheet, Text, View } from 'react-native'
 import React, { useLayoutEffect } from 'react'
 import Screen from '../../../ui/Screen'
 import { useNavigation } from '../../../utils/navigation'
-import { font } from '../../../utils/font'
 import BackIcon from 'react-native-vector-icons/Ionicons';
 import { defaultColors } from '../../../styles'
 
@@ -23,6 +22,7 @@ const MovieSeatScreen = () => {
     return (
         <Screen style={styles.container} >
             <Text>MovieSeatScreen</Text>
+            <Text>To be Completed...</Text>
         </Screen>
     )
 }

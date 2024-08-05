@@ -23,11 +23,8 @@ const AnimatedHeader = ({
 
 }: AnimatedHeaderProps) => {
 
-
     return (
-        <View
-            style={styles.header}
-        >
+        <View style={styles.header}>
             {textLeft ? (
                 <Text style={styles.headerText}>{textLeft}</Text>
             ) : null}
